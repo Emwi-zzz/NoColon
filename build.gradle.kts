@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.2.21"
+    antlr
 }
 
 group = "org.example"
@@ -10,6 +11,8 @@ repositories {
 }
 
 dependencies {
+    antlr("org.antlr:antlr4:4.13.1")
+    implementation("org.antlr:antlr4-runtime:4.13.1")
     testImplementation(kotlin("test"))
 }
 
@@ -19,4 +22,8 @@ kotlin {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.generateGrammarSource {
+    arguments = arguments + listOf("-visitor", "-listener")
 }

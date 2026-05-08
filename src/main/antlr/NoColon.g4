@@ -10,7 +10,6 @@ statement
     | whileStatement
     | functionDeclaration
     | returnStatement
-    | expression
     ;
 
 variableAssignment

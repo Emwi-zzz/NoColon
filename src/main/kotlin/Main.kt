@@ -1,16 +1,31 @@
 package org.example
 
+import NoColonLexer
+import NoColonParser
+import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.TokenStream
+import org.example.interpreter.parser.toAst
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
+    val input = """
+        fun fact_rec(n) { 
+            if n <= 0 then return 1 else return n * fact_rec(n - 1) 
+        }
+        a = fact_rec(5)
+        a = fact_rec(4)
+    """.trimIndent()
+    val charStream = CharStreams.fromString(input)
 
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
-    }
+    val lexer = NoColonLexer(charStream)
+
+    val tokens = CommonTokenStream(lexer)
+
+    val parser = NoColonParser(tokens)
+
+    val ast = parser.program().toAst()
+
+    println(ast.size)
 }

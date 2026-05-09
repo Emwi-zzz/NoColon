@@ -27,3 +27,7 @@ tasks.test {
 tasks.generateGrammarSource {
     arguments = arguments + listOf("-visitor", "-listener")
 }
+
+tasks.compileKotlin {
+    dependsOn(tasks.generateGrammarSource)
+}

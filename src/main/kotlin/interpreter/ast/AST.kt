@@ -4,7 +4,7 @@ package org.example.interpreter.ast
 sealed interface Node
 
 sealed class Expression : Node {
-    data class Literal(val value: Any) : Expression()
+    data class Literal(val value: Int) : Expression()
 
     data class Variable(val name: String) : Expression()
 

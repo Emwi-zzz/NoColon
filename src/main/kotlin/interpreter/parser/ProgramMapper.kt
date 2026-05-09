@@ -1,5 +1,7 @@
 package org.example.interpreter.parser
 
-fun NoColonParser.ProgramContext.toAst(){
+import org.example.interpreter.ast.Statement
 
+fun NoColonParser.ProgramContext.toAst(): List<Statement>{
+    return statement().map { it.toAst() }
 }

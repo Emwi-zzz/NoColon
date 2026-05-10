@@ -28,6 +28,14 @@ tasks.generateGrammarSource {
     arguments = arguments + listOf("-visitor", "-listener")
 }
 
+tasks.generateTestGrammarSource {
+    arguments = arguments + listOf("-visitor", "-listener")
+}
+
 tasks.compileKotlin {
     dependsOn(tasks.generateGrammarSource)
+}
+
+tasks.compileTestKotlin {
+    dependsOn(tasks.generateTestGrammarSource)
 }

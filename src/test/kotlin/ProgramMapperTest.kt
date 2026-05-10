@@ -239,4 +239,70 @@ class ProgramMapperTest {
 
         assertEquals(expected, astOf(source))
     }
+
+    @Test
+    fun `recursive function and repeated calls map to AST`() {
+        val source = """
+            fun fact_rec(n) { 
+                if n <= 0 then return 1 else return n * fact_rec(n - 1) 
+            }
+            a = fact_rec(5)
+            a = fact_rec(4)
+        """.trimIndent()
+
+        val expected = listOf(
+            Statement.FunctionDecl(
+                name = "fact_rec",
+                parameters = listOf("n"),
+                body = listOf(
+                    Statement.If(
+                        condition = Expression.BinaryOp(
+                            left = Expression.Variable("n"),
+                            op = "<=",
+                            right = Expression.Literal(0)
+                        ),
+                        thenBranch = listOf(
+                            Statement.Return(
+                                expression = Expression.Literal(1)
+                            )
+                        ),
+                        elseBranch = listOf(
+                            Statement.Return(
+                                expression = Expression.BinaryOp(
+                                    left = Expression.Variable("n"),
+                                    op = "*",
+                                    right = Expression.Call(
+                                        functionName = "fact_rec",
+                                        arguments = listOf(
+                                            Expression.BinaryOp(
+                                                left = Expression.Variable("n"),
+                                                op = "-",
+                                                right = Expression.Literal(1)
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            ),
+            Statement.Assignment(
+                name = "a",
+                expression = Expression.Call(
+                    functionName = "fact_rec",
+                    arguments = listOf(Expression.Literal(5))
+                )
+            ),
+            Statement.Assignment(
+                name = "a",
+                expression = Expression.Call(
+                    functionName = "fact_rec",
+                    arguments = listOf(Expression.Literal(4))
+                )
+            )
+        )
+
+        assertEquals(expected, astOf(source))
+    }
 }

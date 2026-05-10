@@ -1,9 +1,15 @@
 package org.example.interpreter.ast
 
+import org.example.interpreter.ast.evaluate.*
+import org.example.interpreter.environment.Environment
+
 
 sealed interface Node
 
 sealed class Expression : Node {
+    fun evaluate(env: Environment): Int {
+        return ExpressionHandler.evaluate(this, env)
+    }
     data class Literal(val value: Int) : Expression()
 
     data class Variable(val name: String) : Expression()
@@ -16,6 +22,9 @@ sealed class Expression : Node {
 }
 
 sealed class Statement : Node {
+    fun execute(env: Environment) {
+        StatementHandler.execute(this, env)
+    }
     data class Assignment(val name: String, val expression: Expression) : Statement()
 
     data class If(
@@ -33,6 +42,4 @@ sealed class Statement : Node {
     ) : Statement()
 
     data class Return(val expression: Expression) : Statement()
-
-    data class ExpressionStatement(val expression: Expression) : Statement()
 }

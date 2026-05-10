@@ -5,6 +5,7 @@ import NoColonParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.TokenStream
+import org.example.interpreter.environment.Environment
 import org.example.interpreter.parser.toAst
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -15,7 +16,6 @@ fun main() {
             if n <= 0 then return 1 else return n * fact_rec(n - 1) 
         }
         a = fact_rec(5)
-        a = fact_rec(4)
     """.trimIndent()
     val charStream = CharStreams.fromString(input)
 
@@ -27,5 +27,11 @@ fun main() {
 
     val ast = parser.program().toAst()
 
-    println(ast.size)
+    val globalEnvironment = Environment()
+
+    ast.forEach { it.execute(globalEnvironment) }
+
+    val result = globalEnvironment.getAllVariables()
+
+    result.forEach { println("${it.name}: ${it.value}") }
 }

@@ -10,14 +10,16 @@ statement
     | whileStatement
     | functionDeclaration
     | returnStatement
+    | LBRACE block RBRACE
     ;
+
 
 variableAssignment
     : IDENTIFIER ASSIGN expression
     ;
 
 ifStatement
-    : IF expression THEN block (ELSE block)?
+    : IF expression THEN statement (ELSE statement)?
     ;
 
 whileStatement

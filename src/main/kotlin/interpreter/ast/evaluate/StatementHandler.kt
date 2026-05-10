@@ -11,24 +11,23 @@ object StatementHandler {
             is Statement.Return -> executeReturn(statement, environment)
             is Statement.Assignment -> executeAssignment(statement, environment)
             is Statement.FunctionDecl -> executeFunctionDecl(statement, environment)
+            is Statement.Block -> executeBlock(statement, environment)
         }
     }
 }
 
+
 fun StatementHandler.executeIf(statement: Statement.If, environment: Environment) {
     if(ExpressionHandler.evaluate(statement.condition, environment) != 0){
-        val localEnv = Environment(environment)
-        statement.thenBranch.forEach { execute(it, localEnv) }
+        statement.thenBranch.forEach { execute(it, environment) }
     } else {
-        val localEnv = Environment(environment)
-        statement.elseBranch?.forEach { execute(it, localEnv) }
+        statement.elseBranch?.forEach { execute(it, environment) }
     }
 }
 
 fun StatementHandler.executeWhile(statement: Statement.While, environment: Environment) {
     while(ExpressionHandler.evaluate(statement.condition, environment) != 0){
-        val localEnv = Environment(environment)
-        statement.body.forEach { execute(it, localEnv) }
+        statement.body.forEach { execute(it, environment) }
     }
 }
 
@@ -43,4 +42,8 @@ fun StatementHandler.executeAssignment(statement: Statement.Assignment, environm
 
 fun StatementHandler.executeFunctionDecl(statement: Statement.FunctionDecl, environment: Environment) {
     environment.declareFunction(statement)
+}
+
+fun StatementHandler.executeBlock(statement: Statement.Block, environment: Environment) {
+    statement.statements.forEach { execute(it, environment) }
 }

@@ -42,4 +42,6 @@ sealed class Statement : Node {
     ) : Statement()
 
     data class Return(val expression: Expression) : Statement()
+
+    data class Block(val statements: List<Statement>) : Statement()
 }

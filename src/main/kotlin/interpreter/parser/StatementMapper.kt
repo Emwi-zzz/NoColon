@@ -12,7 +12,16 @@ fun NoColonParser.StatementContext.toAst(): Statement {
         whileStatement() != null -> whileStatement().toAst()
         functionDeclaration() != null -> functionDeclaration().toAst()
         returnStatement() != null -> returnStatement().toAst()
+        block() != null -> Statement.Block(block().toAst())
         else -> NCLog(UnknownStatementError(text))
+    }
+}
+
+fun NoColonParser.StatementContext.toStatementList(): List<Statement> {
+    return if (block() != null) {
+        block().toAst()
+    } else {
+        listOf(toAst())
     }
 }
 
@@ -24,12 +33,12 @@ fun NoColonParser.VariableAssignmentContext.toAst(): Statement.Assignment {
 }
 
 fun NoColonParser.IfStatementContext.toAst(): Statement.If {
-    val blocks = block()
+    val statements = statement()
 
     return Statement.If(
         condition = expression().toAst(),
-        thenBranch = blocks[0].toAst(),
-        elseBranch = blocks.getOrNull(1)?.toAst()
+        thenBranch = statements[0].toStatementList(),
+        elseBranch = statements.getOrNull(1)?.toStatementList()
     )
 }
 

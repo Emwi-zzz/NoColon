@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.2.21"
     antlr
+    application
 }
 
 group = "org.example"
@@ -19,6 +20,15 @@ dependencies {
 kotlin {
     jvmToolchain(23)
 }
+
+application {
+    mainClass.set("org.example.MainKt")
+}
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}
+
 
 tasks.test {
     useJUnitPlatform()

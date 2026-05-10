@@ -77,7 +77,7 @@ class ProgramMapperTest {
     @Test
     fun `if else statement maps to AST`() {
         val source = """
-            if x < 10 then y = 1, return y else y = 2
+            if x < 10 then {y = 1 return y} else y = 2
         """.trimIndent()
 
         val expected = listOf(
